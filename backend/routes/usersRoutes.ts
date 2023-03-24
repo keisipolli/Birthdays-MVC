@@ -4,7 +4,6 @@ import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const verifier = require('@gradeup/email-verify');
-
 const prisma = new PrismaClient();
 const router = express.Router();
 

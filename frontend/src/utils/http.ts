@@ -9,6 +9,14 @@ export class $http {
             const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
             xhr.open(method, `${BASE_URL}${url}`);
+
+            // Add bearer header with session id to request header if it exists
+            console.log('session ID:', localStorage.getItem('sessionId'));
+
+            if (localStorage.getItem('sessionId')) {
+                xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('sessionId')}`);
+            }
+
             xhr.setRequestHeader('Content-Type', 'application/json')
 
             xhr.onload = () => {
@@ -58,5 +66,9 @@ export class $http {
 
     static post(url: string, data: any, config = {}) {
         return this.request('POST', url, data, config);
+    }
+
+    static delete(url: string, data: any, config = {}) {
+        return this.request('DELETE', url, data, config);
     }
 }

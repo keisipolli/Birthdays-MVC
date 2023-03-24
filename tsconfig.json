@@ -3,7 +3,8 @@
     "target": "es2016",
     "lib": [
       "es5",
-      "dom"
+      "dom",
+      "es2015.promise"
     ],
     "module": "commonjs",
     "baseUrl": "./",
