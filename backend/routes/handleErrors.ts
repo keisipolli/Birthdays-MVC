@@ -1,7 +1,7 @@
-import {Request, Response, NextFunction} from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 
 // Define a type for route handlers
-type RouteHandler = (req: Request, res: Response) => Promise<void>;
+type RouteHandler = (req: Request, res: Response) => Promise<void | express.Response>;
 
 // This function is used to wrap route handlers in a try/catch block in order to catch any errors that may be thrown from the route handler.
 export const handleErrors = (routeHandler: RouteHandler) => {
@@ -10,7 +10,7 @@ export const handleErrors = (routeHandler: RouteHandler) => {
         try {
 
             // Call the route handler
-            await routeHandler(req, res);
+            return await routeHandler(req, res);
 
         } catch (err) {
 

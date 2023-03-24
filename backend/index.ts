@@ -3,7 +3,8 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import {Error} from './types';
 import * as dotenv from 'dotenv';
-import exampleRoutes from "./routes/exampleRoutes";
+import usersRoutes from "./routes/usersRoutes";
+import cors from 'cors';
 
 dotenv.config();
 const port: Number = Number(process.env.PORT) || 3000;
@@ -14,7 +15,7 @@ const swaggerDocument: Object = YAML.load('./swagger.yaml');
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
+app.use(cors());
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +24,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Routes
-app.use('/examples', exampleRoutes);
+
+app.use('/users', usersRoutes);
 
 // Health check
 app.get('/health-check', (req, res) => {

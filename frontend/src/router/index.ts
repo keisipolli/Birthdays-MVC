@@ -1,22 +1,29 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 
 // Import your components here
 // @ts-ignore
-import Home from '../views/Home.vue';
-// @ts-ignore
-import About from '../views/About.vue';
+import SignUp from '../views/SignUp.vue';
+import SignIn from '../views/SignIn.vue';
+import BirthdayBook from '../views/BirthdayBook.vue';
+import Calendar from '../views/Calendar.vue';
 
 const routes = [
+
     {
         path: '/',
-        name: 'Home',
-        component: Home,
+        name: 'Friends birthday book',
+        component: BirthdayBook,
     },
     {
-        path: '/about',
-        name: 'About',
-        component: About,
+        path: '/signup',
+        name: 'Sign Up',
+        component: SignUp,
     },
+    {
+        path: '/signin',
+        name: 'Sign In',
+        component: SignIn,
+    }
 ];
 
 const router = createRouter({

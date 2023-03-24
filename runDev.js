@@ -28,10 +28,13 @@ const killProcessesByPort = (port) => {
 };
 
 const startProcess = (directory) => {
-    const options = { cwd: directory, shell: true };
+    const options = {cwd: directory, shell: true};
     const prefix = directory === './backend' ? 'Backend' : 'Frontend';
     const process = spawn('npm', ['run', 'dev'], options);
     process.stdout.on('data', (data) => {
+        console.log(`${prefix}:\n${data.toString().trim()}\n`);
+    });
+    process.stderr.on('data', (data) => {
         console.log(`${prefix}:\n${data.toString().trim()}\n`);
     });
     process.on('error', (error) => {
@@ -49,7 +52,6 @@ const runApp = () => {
         if (!backendPort) throw new Error('PORT not found in .env');
         [backendPort, 5173].forEach(killProcessesByPort);
         ['./backend', './frontend'].forEach(startProcess);
-
     } catch (error) {
         console.error('Error starting application:', error);
     }
