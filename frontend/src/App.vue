@@ -5,6 +5,7 @@
     <nav>
       <router-link to="/signup">Sign Up</router-link>
       <router-link to="/signin">Sign In</router-link>
+      <router-link to="/terms">Terms & Policies</router-link>
 
     </nav>
     <router-view></router-view>
