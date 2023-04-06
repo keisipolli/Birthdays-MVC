@@ -1,4 +1,4 @@
-<!-- src/views/SignUp.vue -->
+<!-- src/views/SignIn.vue -->
 <script>
 import {$http} from '../utils/http'
 
@@ -6,39 +6,41 @@ import {$http} from '../utils/http'
 export default {
   data() {
     return {
-      signInEmail: '',
-      signInPassword: '',
+      signUpEmail: '',
+      signUpPassword: '',
       emailCheckResult: ''
     }
   },
   methods: {
-    signUp() {
+    signIn() {
 
       // Send a POST request to the backend
-      $http.post('/users', {
-        email: this.signInEmail,
-        password: this.signInPassword
+      $http.post('/sessions', {
+        email: this.signUpEmail,
+        password: this.signUpPassword
       }).then(response => {
-        // Redirect to sign-in page
-        this.$router.push('/signin')
+        //Save session id to the local storage
+        localStorage.setItem('sessionId', response.id)
+        // Redirect to (add birthdays) main page. In future we will redirect to the add birthdays page
+        this.$router.push('/')
       })
     },
     checkEmail() {
 
       // If the email is empty, don't send a request
-      if (!this.signInEmail) {
+      if (!this.signUpEmail) {
         this.emailCheckResult = ''
         return
       }
 
       // Send a POST /users/check-email request to the backend
-      $http.post('/users/check-email', {
-        email: this.signInEmail
-      }, {disableErrorHandling: true}).then(response => {
-        this.emailCheckResult = '';
-      }).catch(response => {
-        this.emailCheckResult = response.body.error;
-      })
+      //$http.post('/users/check-email', {
+        //email: this.signUpEmail
+      //}, {disableErrorHandling: true}).then(response => {
+        //this.emailCheckResult = '';
+      //}).catch(response => {
+        //this.emailCheckResult = response.body.error;
+      //})
     }
   }
 }
@@ -55,14 +57,15 @@ export default {
       </label>
       <input type="text" name="email" placeholder="Type email here" class="input input-bordered w-full max-w-xs"
              v-on:keyup="checkEmail"
-             v-model="signInEmail"/>
+             v-model="signUpEmail"/>
+      <!--You dont need this part in Sign in
       <label class="label">
-        <!-- Show red text if the email is already taken -->
+      Show red text if the email is already taken
         <span class="label-text-alt text-red-600" id="email-error"
               :class="{ invisible: emailCheckResult.length === 0 }">
           {{ emailCheckResult }}.
         </span>
-      </label>
+      </label>-->
     </div>
 
     <!-- Password -->
@@ -71,18 +74,18 @@ export default {
         <span class="label-text">Password</span>
       </label>
       <input type="password" name="password" placeholder="Type password here" class="input input-bordered w-full max-w-xs"
-             v-model="signInPassword"/>
+             v-model="signUpPassword"/>
       <label class="label">
         <!-- Show red text if the password is too short -->
         <span class="label-text-alt text-red-600" id="password-error"
-              :class="{ invisible: !(signInPassword.length > 0 && signInPassword.length < 8) }">Password must be at least 8 characters long</span>
+              :class="{ invisible: !(signUpPassword.length > 0 && signUpPassword.length < 8) }">Password must be at least 8 characters long</span>
       </label>
     </div>
   </div>
   <div class="h-30">&nbsp;</div>
-  <button id="sign-in" class="btn btn-primary" @click="signIp">Sign In</button>
+  <!--Do not show sign in button if the email and password are not valid-->
+  <button id="sign-in" class="btn btn-primary" @click="signIn" :disabled="!(signUpEmail.length > 0 && signUpPassword.length > 0)">Sign In</button>
 </template>
-
 
 <style>
 .invisible {

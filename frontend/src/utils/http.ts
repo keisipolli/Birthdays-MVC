@@ -9,6 +9,12 @@ export class $http {
             const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
             xhr.open(method, `${BASE_URL}${url}`);
+
+            // Add bearer header with session id to request header if it exists
+            if (sessionStorage.getItem('sessionId')) {
+                xhr.setRequestHeader('Authorization', `Bearer ${sessionStorage.getItem('sessionId')}`);
+            }
+
             xhr.setRequestHeader('Content-Type', 'application/json')
 
             xhr.onload = () => {
