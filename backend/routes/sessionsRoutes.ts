@@ -11,7 +11,6 @@ const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
 const router = express.Router();
 
-
 // Routes
 router.post('/', handleErrors (
     async (req: Request, res: Response) => {
