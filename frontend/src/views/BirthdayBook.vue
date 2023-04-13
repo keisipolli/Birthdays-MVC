@@ -14,17 +14,7 @@ export default {
       return !localStorage.getItem('sessionId')
     },
   },
-  //Add signOut method
   methods: {
-    //Send DELETE request to the backend
-    signOut() {
-      $http.delete('/sessions').then(response => {
-        //Remove sessionId from the local storage
-        localStorage.removeItem('sessionId')
-        //Redirect to sign-in page
-        this.$router.push('/signin')
-      })
-    },
     signUp() {
 
       // Send a POST request to the backend
@@ -59,12 +49,6 @@ export default {
 <template>
   <div>
     <h1>BirthdayBook</h1>
-    <!--Add sign out button that will call signOut method
-    <button class="btn btn-primary" v-on:click="signOut">Sign Out</button>
-    Disable Sign Out button if there is no sessionId in the local storage
-<button class="btn btn-primary" v-on:click="signOut" v-if="localStorage.getItem('sessionId')">Sign Out</button>-->
-
-    <button :disabled="isSessionIdEmpty" @click="signOut">Sign Out</button>
   </div>
 </template>
 

@@ -2,14 +2,13 @@ import express, {NextFunction, Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { CustomRequest } from '../types/customRequest';
-//import { auth } from '../middleware/auth';
 
 
 const {v4: uuidv4} = require('uuid');
 const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
 const router = express.Router();
+
 
 // Routes
 router.post('/', handleErrors (
@@ -44,13 +43,23 @@ router.post('/', handleErrors (
     }
 ));
 
-
 // Delete session
 router.delete('/', handleErrors(
     async (req: Request, res: Response) => {
         try {
-            const session = await prisma.session.delete({
-                where: {id: req.body.id},
+            const sessionId = req.headers.authorization;
+            if (!sessionId) {
+                return res.status(401).send('Session ID not provided');
+            }
+            console.log("Session ID to delete:", sessionId);
+            const session = await prisma.session.findUnique({
+                where: { id: sessionId.substring(7) },
+            });
+            if (!session) {
+                return res.status(404).send('Session not found');
+            }
+            await prisma.session.delete({
+                where: { id: sessionId.substring(7) },
             });
             res.status(200).send(session);
         } catch (error) {
@@ -59,44 +68,5 @@ router.delete('/', handleErrors(
         }
     }
 ));
-
-// async function authorizeRequest(req: CustomRequest, res: Response, next: NextFunction) {
-//     // Check that there is an authorization header
-//     if (!req.headers.authorization) return res.status(401).send('Missing authorization header')
-//
-//     // Check that the authorization header is in the correct format
-//    const authorizationHeader = req.headers.authorization.split(' ')
-//    if (authorizationHeader.length !== 2 || authorizationHeader[0] !== 'Bearer') return res.status(400).send('Invalid authorization header')
-//
-//     // Get sessionId from authorization header
-//    const sessionId = authorizationHeader[1]
-//
-//     // Find session in database
-//    const session = await prisma.session.findUnique({
-//        where: {
-//            id: sessionId,
-//        },
-//    })
-//    if (!session) return res.status(401).send('Invalid session')
-//
-//     // Check that the user exists
-//   const user = await prisma.user.findUnique({
-//       where: {
-//            id: session.userId,
-//        },
-//    })
-//    if (!user) return res.status(401).send('Invalid session')
-//
-//     // Add user to request object
-//    req.user = user
-//
-//     // Add session to request object
-//    req.session = session
-//
-//     // Call next middleware
-//    next()
-// }
-
-//module.exports = authorizeRequest
 
 export default router;
