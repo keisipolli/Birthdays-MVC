@@ -11,8 +11,6 @@ export class $http {
             xhr.open(method, `${BASE_URL}${url}`);
 
             // Add bearer header with session id to request header if it exists
-            console.log('session ID:', localStorage.getItem('sessionId'));
-
             if (localStorage.getItem('sessionId')) {
                 xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('sessionId')}`);
             }

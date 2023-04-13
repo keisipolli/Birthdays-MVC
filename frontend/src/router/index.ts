@@ -28,7 +28,12 @@ const routes = [
         path: '/terms',
         name: 'Terms & Policies',
         component: TermsPolicies,
-    }
+    },
+    {
+        path: '/content',
+        name: 'Content',
+        component: () => import('../views/Content.vue'),
+    },
 ];
 
 const router = createRouter({
