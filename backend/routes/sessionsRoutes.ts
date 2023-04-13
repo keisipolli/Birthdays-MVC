@@ -2,8 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 import {handleErrors} from './handleErrors';
 import {PrismaClient} from '@prisma/client';
 import bcrypt from 'bcrypt';
-import {User} from '@prisma/client';
-import {Session} from '@prisma/client';
+import { CustomRequest } from '../types/customRequest';
 //import { auth } from '../middleware/auth';
 
 
@@ -11,17 +10,6 @@ const {v4: uuidv4} = require('uuid');
 const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
 const router = express.Router();
-
-interface CustomRequest extends Request {
-    user: User,
-    session: Session
-}
-
-//interface CustomRequest extends Express.Request {
-  //  user?: any; // replace `User` with the actual type of your user object
-    //session?: any; // replace `Session` with the actual type of your session object
-//}
-
 
 
 // Routes
@@ -33,6 +21,7 @@ router.post('/', handleErrors (
                     email: req.body.email
                 },
             });
+            console.log(user)
             if (!user) return res.status(404).send('User not found');
 
             if (user.password === null) {
@@ -58,7 +47,7 @@ router.post('/', handleErrors (
 
 // Delete session
 router.delete('/', authorizeRequest, handleErrors(
-    async (req: CustomRequest, res: Response) => {
+    async (req: Request, res: Response) => {
         try {
             const session = await prisma.session.delete({
                 where: {id: req.body.id},
