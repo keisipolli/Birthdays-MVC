@@ -45,8 +45,9 @@ router.post('/', handleErrors (
     }
 ));
 
+
 // Delete session
-router.delete('/', authorizeRequest, handleErrors(
+router.delete('/', handleErrors(
     async (req: Request, res: Response) => {
         try {
             const session = await prisma.session.delete({
@@ -60,43 +61,43 @@ router.delete('/', authorizeRequest, handleErrors(
     }
 ));
 
-async function authorizeRequest(req: CustomRequest, res: Response, next: NextFunction) {
-    // Check that there is an authorization header
-    if (!req.headers.authorization) return res.status(401).send('Missing authorization header')
+// async function authorizeRequest(req: CustomRequest, res: Response, next: NextFunction) {
+//     // Check that there is an authorization header
+//     if (!req.headers.authorization) return res.status(401).send('Missing authorization header')
+//
+//     // Check that the authorization header is in the correct format
+//    const authorizationHeader = req.headers.authorization.split(' ')
+//    if (authorizationHeader.length !== 2 || authorizationHeader[0] !== 'Bearer') return res.status(400).send('Invalid authorization header')
+//
+//     // Get sessionId from authorization header
+//    const sessionId = authorizationHeader[1]
+//
+//     // Find session in database
+//    const session = await prisma.session.findUnique({
+//        where: {
+//            id: sessionId,
+//        },
+//    })
+//    if (!session) return res.status(401).send('Invalid session')
+//
+//     // Check that the user exists
+//   const user = await prisma.user.findUnique({
+//       where: {
+//            id: session.userId,
+//        },
+//    })
+//    if (!user) return res.status(401).send('Invalid session')
+//
+//     // Add user to request object
+//    req.user = user
+//
+//     // Add session to request object
+//    req.session = session
+//
+//     // Call next middleware
+//    next()
+// }
 
-    // Check that the authorization header is in the correct format
-    const authorizationHeader = req.headers.authorization.split(' ')
-    if (authorizationHeader.length !== 2 || authorizationHeader[0] !== 'Bearer') return res.status(400).send('Invalid authorization header')
-
-    // Get sessionId from authorization header
-    const sessionId = authorizationHeader[1]
-
-    // Find session in database
-    const session = await prisma.session.findUnique({
-        where: {
-            id: sessionId,
-        },
-    })
-    if (!session) return res.status(401).send('Invalid session')
-
-    // Check that the user exists
-    const user = await prisma.user.findUnique({
-        where: {
-            id: session.userId,
-        },
-    })
-    if (!user) return res.status(401).send('Invalid session')
-
-    // Add user to request object
-    req.user = user
-
-    // Add session to request object
-    req.session = session
-
-    // Call next middleware
-    next()
-}
-
-module.exports = authorizeRequest
+//module.exports = authorizeRequest
 
 export default router;

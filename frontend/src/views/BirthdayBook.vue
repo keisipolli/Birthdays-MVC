@@ -1,4 +1,6 @@
 <script>
+import {$http} from "../utils/http.ts";
+
 export default {
   data() {
     return {
@@ -14,11 +16,14 @@ export default {
   },
   //Add signOut method
   methods: {
+    //Send DELETE request to the backend
     signOut() {
-      //Remove sessionId from the local storage
-      localStorage.removeItem('sessionId')
-      //Redirect to sign-in page
-      this.$router.push('/signin')
+      $http.delete('/sessions').then(response => {
+        //Remove sessionId from the local storage
+        localStorage.removeItem('sessionId')
+        //Redirect to sign-in page
+        this.$router.push('/signin')
+      })
     },
     signUp() {
 

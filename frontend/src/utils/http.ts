@@ -11,8 +11,10 @@ export class $http {
             xhr.open(method, `${BASE_URL}${url}`);
 
             // Add bearer header with session id to request header if it exists
-            if (sessionStorage.getItem('sessionId')) {
-                xhr.setRequestHeader('Authorization', `Bearer ${sessionStorage.getItem('sessionId')}`);
+            console.log('session ID:', localStorage.getItem('sessionId'));
+
+            if (localStorage.getItem('sessionId')) {
+                xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('sessionId')}`);
             }
 
             xhr.setRequestHeader('Content-Type', 'application/json')
@@ -64,5 +66,9 @@ export class $http {
 
     static post(url: string, data: any, config = {}) {
         return this.request('POST', url, data, config);
+    }
+
+    static delete(url: string, data: any, config = {}) {
+        return this.request('DELETE', url, data, config);
     }
 }
