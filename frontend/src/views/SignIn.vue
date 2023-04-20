@@ -22,7 +22,7 @@ export default {
         //Save session id to the local storage
         localStorage.setItem('sessionId', response.id)
         // Redirect to (add birthdays) main page. In future we will redirect to the add birthdays page
-        this.$router.push('/content')
+        this.$router.push('/birthdays')
       })
     },
     checkEmail() {
