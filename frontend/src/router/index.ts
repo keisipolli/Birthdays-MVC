@@ -6,6 +6,8 @@ import SignUp from '../views/SignUp.vue';
 import SignIn from '../views/SignIn.vue';
 import BirthdayBook from '../views/BirthdayBook.vue';
 import TermsPolicies from '../views/TermsPolicies.vue';
+import Birthdays from '../views/Birthdays.vue';
+
 
 const routes = [
 
@@ -30,9 +32,9 @@ const routes = [
         component: TermsPolicies,
     },
     {
-        path: '/content',
-        name: 'Content',
-        component: () => import('../views/Content.vue'),
+        path: '/birthdays',
+        name: 'Birthdays',
+        component: Birthdays,
     },
 ];
 
