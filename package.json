@@ -16,9 +16,7 @@
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0"
   },
   "dependencies": {
-    "@fullcalendar/vue": "^6.1.5",
     "ts-node": "^10.9.1",
-    "v-calendar": "^2.4.1",
     "vue": "^3.2.36"
   }
 }
