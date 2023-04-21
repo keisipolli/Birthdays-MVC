@@ -2,7 +2,7 @@ import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
 
 let email = ''
 Given(/^the user navigates to the sign-in page$/, function () {
-    cy.visit("http://localhost:5173/signin");
+    cy.visit("https://localhost:5173/signin");
 });
 When(/^the user enters a valid email and password$/, function () {
 

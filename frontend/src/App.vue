@@ -1,111 +1,86 @@
 <template>
   <div id="app">
     <nav>
-      <router-link v-if="!isLoggedIn" to="/signup">
-        <i class="fas fa-user-plus"></i> Sign Up
-      </router-link>
-      <router-link v-if="!isLoggedIn" to="/">
-        <i class="fas fa-home"></i> Home
-      </router-link>
-<!--      Dont use for now: margo 14.04.2023-->
-<!--      <router-link v-if="isLoggedIn" to="/birthdays">-->
-<!--        <i class="fas fa-birthday-cake"></i> Birthdays-->
-<!--      </router-link>-->
-      <router-link to="/terms">
-        <i class="fas fa-file-alt"></i> Terms & Policies
-      </router-link>
-      <router-link v-if="!isLoggedIn" to="/signin">
-        <i class="fas fa-sign-in-alt"></i> Sign In
-      </router-link>
-<!--      Add sign out button but do not use it because it does not make sessions-->
-<!--      <router-link v-if="isLoggedIn" to="/" @click="signOut">-->
-<!--        <i class="fas fa-sign-out-alt"></i> Sign Out-->
-<!--      </router-link>-->
+      <router-link to="/">Home</router-link>
+      <router-link to="/terms">Terms</router-link>
+      <router-link v-if="!loggedIn" to="/signup">Sign Up</router-link>
+      <router-link v-if="!loggedIn" to="/signin">Sign In</router-link>
+      <router-link v-if="loggedIn" to="/birthdays">Birthdays</router-link>
+      <a v-if="loggedIn" href="#" @click="logout">Sign Out</a>
     </nav>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
-import {$http} from "./utils/http.ts";
-
 export default {
   name: 'App',
-  computed: {
-    sessionId() {
-      return localStorage.getItem('sessionId')
-    },
-    isSessionIdEmpty() {
-      return !localStorage.getItem('sessionId')
-    },
-    isLoggedIn() {
-      return this.sessionId !== null
-    }
+  data() {
+    return {
+      loggedIn: false,
+    };
   },
-
-  methods: {
-    signOut() {
-      // Send a DELETE request to the backend
-      $http.delete('/sessions', {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('sessionId')
-        }
-      }).then(response => {
-        // Remove sessionId from localStorage
-        localStorage.removeItem('sessionId');
-
-        // Redirect to main page
-        this.$router.push('/');
-      });
-    },
-    onStorage(event) {
-      if (event.key === 'sessionId') {
-        this.$forceUpdate(); // Force re-evaluation of computed properties
-      }
-    }
-  },
-
   created() {
-    window.addEventListener('storage', this.onStorage);
+    this.checkLoggedIn();
   },
+  methods: {
+    checkLoggedIn() {
+      const sessionId = localStorage.getItem('sessionId');
+      if (sessionId) {
+        // Check with server to validate session
+        // If valid, set loggedIn to true
+        this.loggedIn = true;
+      }
+    },
+    logout() {
+      localStorage.removeItem('sessionId');
+      this.loggedIn = false;
+      this.$router.push('/');
+    },
+  },
+};
+</script>
+<style>
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #eee;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
 
-  beforeDestroy() {
-    window.removeEventListener('storage', this.onStorage);
+nav a {
+  padding: 5px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+nav a:not(:last-child) {
+  margin-right: 20px;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+
+  nav a {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  nav a:last-child {
+    margin-bottom: 0;
   }
 }
-</script>
-
-
-<!--      <router-link to="/signup">-->
-<!--        <i class="fas fa-user-plus"></i> Sign Up-->
-<!--      </router-link>-->
-<!--      <router-link to="/terms">-->
-<!--        <i class="fas fa-file-alt"></i> Terms & Policies-->
-<!--      </router-link>-->
-<!--      <router-link to="/signin">-->
-<!--        <i class="fas fa-sign-in-alt"></i> Sign In-->
-<!--      </router-link>-->
-<!--    </nav>-->
-<!--    <router-view></router-view>-->
-<!--  </div>-->
-<!--</template>-->
-
-<style scoped>
-
-nav a {
-  padding: 10px;
-  margin-right: 20px;
-  margin-bottom: 50px;
-  text-align: center;
-}
-nav a {
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 16px;
-}
-nav a:hover {
-  color: #0077cc;
-  text-decoration: underline;
-}
-
 </style>
+
+

@@ -13,6 +13,15 @@ const port: Number = Number(process.env.PORT) || 3000;
 const app: Express = express();
 const swaggerDocument: Object = YAML.load('./swagger.yaml');
 
+//Add HTTPS support
+const https = require('https');
+const fs = require('fs');
+
+//Add key and certificate
+const key = fs.readFileSync('../certs/server.key');
+const cert = fs.readFileSync('../certs/server.cert');
+
+
 // Middleware
 app.use(express.json());
 app.use(express.static('public'));
@@ -36,5 +45,12 @@ app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
 
-// Start the server
-app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));
+//Use HTTPS
+https.createServer({
+    key: key,
+    cert: cert
+}, app).listen(port, () => {
+    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
+});
+// // Start the server
+// app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));

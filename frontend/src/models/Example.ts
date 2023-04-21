@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // @ts-ignore
-const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://localhost:3000';
 
 class Example {
     async getAll() {
