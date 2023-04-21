@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1>Birthdays</h1>
+    <h1>Your Friends Birthdays Book</h1>
     <ul>
       <li v-for="birthday in birthdays" :key="birthday.id" class="birthday">
         <span class="name">{{ birthday.name }}</span>: <span class="date">{{ birthday.date }}</span>
         <button @click="editBirthdayModal(birthday)">Edit</button>
-        <button @click="deleteBirthday(birthday.id)">Delete</button>
+        <button class ="delete" @click="deleteBirthday(birthday.id)">Delete</button>
 
       </li>
     </ul>
@@ -189,85 +189,136 @@ export default defineComponent({
 
 </script>
 <style scoped>
-/*.birthday {*/
-/*  margin-bottom: 1rem;*/
-/*}*/
-
-/*.name {*/
-/*  font-weight: bold;*/
-/*}*/
-
-/*.date {*/
-/*  margin-left: 0.5rem;*/
-/*  color: #999;*/
-/*}*/
-
-/*.add-birthday {*/
-/*  margin-top: 2rem;*/
-/*}*/
-
-/*.modal {*/
-/*  position: fixed;*/
-/*  top: 0;*/
-/*  left: 0;*/
-/*  width: 100%;*/
-/*  height: 100%;*/
-/*  background-color: rgba(0, 0, 0, 0.5);*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  align-items: center;*/
-/*}*/
-
-/*.modal-content {*/
-/*  background-color: white;*/
-/*  padding: 2rem;*/
-/*  border-radius: 4px;*/
-/*}*/
-
-body {
-  background-color: #f4f4f4;
+h1 {
+  font-size: 24px;
+  margin-bottom: 16px;
 }
 
-.edit-birthday-modal {
-  background-color: #f4f4f4;
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-h1, h2 {
-  font-size: 2.5rem;
+li.birthday {
+  margin-bottom: 8px;
+}
+
+.birthday .name {
   font-weight: bold;
 }
 
-form {
-  padding: 1rem;
+.add-birthday {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-form div {
-  margin-bottom: 1rem;
+.add-birthday label {
+  display: block;
+  margin-bottom: 8px;
 }
 
-form button {
-  margin-right: 1rem;
+.add-birthday input[type="text"],
+.add-birthday input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
-form button[type="submit"] {
-  background-color: #007bff;
+.edit-birthday-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-birthday-modal input[type="text"],
+.edit-birthday-modal input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+
+.modal-container input[type="text"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.modal-container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.modal-container h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  margin-left: 8px;
+  background-color: #007aff;
   color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-li button, .modal-buttons button[type="button"] {
-  background-color: #dc3545;
+.modal-buttons button:first-child {
+  background-color: red;
+}
+
+button {
+  padding: 8px 16px;
+  margin-left: 8px;
+  background-color: #007aff;
   color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-form button[type="submit"]:hover,
-form button[type="submit"]:focus {
-  background-color: #0062cc;
+button:first-child {
+  margin-left: 0;
 }
 
-li button:hover, li button:focus,
-.modal-buttons button[type="button"]:hover,
-.modal-buttons button[type="button"]:focus {
-  background-color: #c82333;
+button:hover {
+  background-color: #0050a4;
+}
+
+button:active {
+  background-color: #002c5e;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+button.delete {
+  background-color: red;
 }
 
 </style>
