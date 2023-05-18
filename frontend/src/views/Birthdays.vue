@@ -19,7 +19,6 @@
         <input type="date" id="date" v-model="newBirthday.date">
       </div>
       <button type="submit">Add Birthday</button>
-      <button type="button" @click="signOut">Sign Out</button>
     </form>
     <div class="edit-birthday-modal" v-if="showEditModal">
       <div class="modal-overlay" @click="closeEditModal"></div>
@@ -79,23 +78,6 @@ export default defineComponent({
   },
 
   methods: {
-
-    //Add signOut method
-    signOut() {
-      // Send a DELETE request to the backend
-      $http.delete('/sessions', {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('sessionId')
-        }
-      }).then(response => {
-        // Remove sessionId from localStorage
-        localStorage.removeItem('sessionId');
-
-        // Redirect to main page
-        this.$router.push('/');
-      });
-    },
-
 
     // FETCH BIRTHDAYS
     async fetchBirthdays() {
