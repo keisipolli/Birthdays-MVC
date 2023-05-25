@@ -46,6 +46,10 @@
 import { defineComponent } from 'vue';
 import { $http } from '../utils/http';
 import EditBirthdayModal from '../views/EditBirthdayModal.vue';
+import { io, Socket } from 'socket.io-client';
+
+let socket: Socket;
+
 
 export default defineComponent({
   name: 'Birthdays',
@@ -66,9 +70,48 @@ export default defineComponent({
     };
   },
 
+  created() {
+    // Fetch all existing birthdays from the server
+    this.fetchBirthdays()
+        .then(() => {
+          // Establish Socket.IO connection after fetching birthdays
+          socket = io('https://localhost:3000', {
+            withCredentials: true,
+            extraHeaders: {
+              'Access-Control-Allow-Origin': 'https://localhost:3000', // Replace with your frontend URL
+            },
+          });
 
-  mounted() {
-    this.fetchBirthdays();
+          // Listen for the 'birthdayAdded' event
+          socket.on('birthdayAdded', (birthday) => {
+            // Handle the event, e.g., update the list of birthdays
+            console.log('Birthday added:', birthday);
+            this.birthdays.push(birthday);
+          });
+
+          // Listen for the 'birthdayDeleted' event
+          socket.on('birthdayDeleted', (id) => {
+            // Handle the event, e.g., remove the deleted birthday from the list
+            console.log('Birthday deleted:', id);
+            const index = this.birthdays.findIndex(b => b.id === id);
+            if (index >= 0) {
+              this.birthdays.splice(index, 1);
+            }
+          });
+
+          // Listen for the 'birthdayUpdated' event
+          socket.on('birthdayUpdated', (updatedBirthday) => {
+            // Handle the event, e.g., update the corresponding birthday in the list
+            console.log('Birthday updated:', updatedBirthday);
+            const index = this.birthdays.findIndex(b => b.id === updatedBirthday.id);
+            if (index >= 0) {
+              this.birthdays.splice(index, 1, updatedBirthday);
+            }
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   },
 
   computed: {
@@ -126,6 +169,8 @@ export default defineComponent({
           this.birthdays.splice(index, 1, updatedBirthday);
         }
         this.closeEditModal();
+        // Emit the 'birthdayUpdated' event to the server
+        socket.emit('birthdayUpdated', updatedBirthday);
       } catch (error) {
         console.error(error);
       }
@@ -143,6 +188,7 @@ export default defineComponent({
         console.log('addBirthday response', response);
         newBirthday.id = response.id; // update the id property with the server response
         this.birthdays.push(newBirthday);
+        socket.emit('birthdayAdded', newBirthday);
       } catch (error) {
         console.error(error);
       }
@@ -161,6 +207,8 @@ export default defineComponent({
           if (index >= 0) {
             this.birthdays.splice(index, 1);
           }
+          //Emits the event to the server
+          socket.emit('birthdayDeleted', id);
         }
       } catch (error) {
         console.error(error);

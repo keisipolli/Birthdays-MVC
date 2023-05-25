@@ -20,6 +20,7 @@ export default {
       loggedIn: false,
     };
   },
+
   created() {
     this.checkLoggedIn();
   },
@@ -27,8 +28,7 @@ export default {
     checkLoggedIn() {
       const sessionId = localStorage.getItem('sessionId');
       if (sessionId) {
-        // Check with server to validate session
-        // If valid, set loggedIn to true
+        // Check with server to validate session. If valid, set loggedIn to true
         this.loggedIn = true;
       }
     },

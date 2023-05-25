@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
+import { connectWebSocket } from '../main.ts';
 
 export default defineComponent({
   name: 'EditBirthdayModal',

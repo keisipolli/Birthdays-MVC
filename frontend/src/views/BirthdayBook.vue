@@ -9,6 +9,7 @@ export default {
       emailCheckResult: ''
     }
   },
+
   computed: {
     isSessionIdEmpty() {
       return !localStorage.getItem('sessionId')

@@ -61,12 +61,12 @@ router.post(
                 },
             },
         });
+
         console.log('birthday:', birthday);
 
         res.status(201).send(birthday);
     })
 );
-
 
 // DELETE
 router.delete(
@@ -104,6 +104,7 @@ router.delete(
                 id: `${birthdayId}`,
             },
         });
+
         console.log('Birthday deleted');
 
         res.status(204).send();
@@ -152,6 +153,7 @@ router.patch(
                 date: new Date(date), // convert the string to a DateTime object
             },
         });
+
         console.log('updatedBirthday:', updatedBirthday);
 
         res.status(200).send(updatedBirthday);

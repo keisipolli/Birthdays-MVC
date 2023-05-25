@@ -1,3 +1,4 @@
+import { Server as SocketIOServer } from 'socket.io';
 import express, {Express, NextFunction, Request, Response} from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
@@ -7,6 +8,8 @@ import usersRoutes from "./routes/usersRoutes";
 import cors from 'cors';
 import sessionsRoutes from "./routes/sessionsRoutes";
 import birthdaysRoutes from "./routes/birthdaysRoutes";
+import bodyParser from "body-parser";
+import xmlparser from "express-xml-bodyparser";
 
 dotenv.config();
 const port: Number = Number(process.env.PORT) || 3000;
@@ -21,21 +24,29 @@ const fs = require('fs');
 const key = fs.readFileSync('../certs/server.key');
 const cert = fs.readFileSync('../certs/server.cert');
 
-
 // Middleware
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
+    allowedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'],
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.xml());
+app.use(xmlparser());
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(cors());
 
 // Error handling
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     return res.status(err.statusCode || 500).send(err.message || 'Internal Server Error');
 });
 
 // Routes
-
 app.use('/users', usersRoutes);
 app.use('/sessions', sessionsRoutes);
 app.use('/birthdays', birthdaysRoutes);
@@ -46,11 +57,40 @@ app.get('/health-check', (req, res) => {
 });
 
 //Use HTTPS
-https.createServer({
+const server = https.createServer({
     key: key,
     cert: cert
-}, app).listen(port, () => {
+}, app);
+
+const io = new SocketIOServer(server, {
+    cors: corsOptions
+});
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Handle socket events
+    socket.on('birthdayAdded', (newBirthday) => {
+        console.log('birthdayAdded', newBirthday);
+        socket.broadcast.emit('birthdayAdded', newBirthday);
+    });
+
+    socket.on('birthdayDeleted', (id) => {
+        console.log('birthdayDeleted', id);
+        socket.broadcast.emit('birthdayDeleted', id);
+    });
+
+    socket.on('birthdayUpdated', (updatedBirthday) => {
+        console.log('birthdayUpdated', updatedBirthday);
+        socket.broadcast.emit('birthdayUpdated', updatedBirthday);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+// Start the HTTPS server
+server.listen(port, () => {
     console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
 });
-// // Start the server
-// app.listen(port, () => console.log(`Running at http://localhost:${port} and docs at http://localhost:${port}/docs`));

@@ -11,12 +11,12 @@ BirthdayBook is a simple express app that allows you to create a list of Your fr
 5. Run `npm run install` to install the dependencies for both the frontend and the backend
 6. Run `cd backend && npx prisma db push && cd ..` to create the database tables
 7. Run `npm run dev` from the project root directory to start the frontend and the backend servers at the same time
-8. Go to browser, open localhost:3000 and allow certificate to run app in HTTPS protocol
+8. Go to browser, open `https://localhost:3000`. You get `Your connection is not private` error, choose `advanced` and press `proceed to localhost (unsafe)` to run app in HTTPS protocol
 9. Go to `localhost:5173` to see the app
 
 ### Documentation
 
-The API documentation is at [http://localhost:3000/docs](http://localhost:3000/docs)
+The API documentation is at [https://localhost:3000/docs](http://localhost:3000/docs)
 
 
 ### Tests
