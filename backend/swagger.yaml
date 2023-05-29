@@ -1,27 +1,33 @@
 openapi: 3.0.2
 info:
-  title: notes-vso21
+  title: BirthdayBook
   version: 1.0.0
 paths:
   /users:
     summary: Path used to manage the list of users.
     description: >-
-      The REST endpoint/path used to list and create zero or more `User` entities.  This path contains a
-      `GET` and `POST` operation to perform the list and create tasks, respectively.
+      The REST endpoint/path used to list and create zero or more User entities. This path contains a
+      GET and POST operation to perform the list and create tasks, respectively.
     post:
       requestBody:
-        description: A new `User` to be created.
+        description: A new User to be created.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Credentials'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Credentials'
         required: true
       tags:
-        - /users
+        - Users
       responses:
         '201':
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
               schema:
                 $ref: '#/components/schemas/User'
           description: Successful response.
@@ -33,7 +39,6 @@ paths:
               examples:
                 Email is required:
                   value: |-
-                    
                     {
                         "error": "Email is required"
                     }
@@ -59,7 +64,216 @@ paths:
           description: Conflict
       operationId: createUser
       summary: Create a User
-      description: Creates a new instance of a `User`.
+      description: Creates a new instance of a User
+
+  /birthdays:
+    get:
+      tags:
+        - Birthdays
+      summary: Get all birthdays
+      description: Retrieves a list of all birthdays.
+      operationId: getBirthdays
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Birthday'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Birthday'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+    post:
+      requestBody:
+        description: New birthday data.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBirthday'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/NewBirthday'
+        required: true
+      tags:
+        - Birthdays
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Birthday'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Birthday'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      operationId: createBirthday
+      summary: Create a Birthday
+      description: Creates a new birthday entry.
+
+    patch:
+      requestBody:
+        description: Updated birthday data.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Birthday'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Birthday'
+        required: true
+      tags:
+        - Birthdays
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Birthday'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Birthday'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Birthday not found
+        '500':
+          description: Internal Server Error
+      operationId: updateBirthday
+      summary: Update a Birthday
+      description: Updates an existing birthday entry.
+
+  /birthdays/{id}:
+    delete:
+      tags:
+        - Birthdays
+      summary: Delete a Birthday
+      description: Deletes a birthday entry by ID.
+      operationId: deleteBirthday
+      parameters:
+        - in: path
+          name: id
+          description: ID of the birthday to delete.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Successful response. Birthday deleted.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Birthday not found
+        '500':
+          description: Internal Server Error
+
+  /sessions:
+    post:
+      tags:
+        - Sessions
+      summary: Create a session
+      description: Creates a new session for a user.
+      requestBody:
+        description: Credentials for user authentication.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+        required: true
+      responses:
+        '201':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+      operationId: createSession
+      security: []
+
+    delete:
+      tags:
+        - Sessions
+      summary: Delete a session
+      description: Deletes a session for a user.
+      operationId: deleteSession
+      responses:
+        '204':
+          description: Successful response. Session deleted.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Session not found
+        '500':
+          description: Internal Server Error
+
 components:
   schemas:
     User:
@@ -75,6 +289,7 @@ components:
       example:
         email: asd6@asd.ee
         id: 14
+
     Credentials:
       title: Root Type for Credentials
       description: ''
@@ -88,6 +303,7 @@ components:
       example:
         email: asd6@asd.ee
         password: '11111111'
+
     Error:
       title: Root Type for Error
       description: ''
@@ -97,6 +313,57 @@ components:
           type: string
       example:
         error: Email is required
+
+    NewBirthday:
+      title: New Birthday
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+        date:
+          type: string
+          format: date
+          example: 2023-05-25
+      required:
+        - name
+        - date
+
+    Birthday:
+      title: Birthday
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        date:
+          type: string
+          format: date
+      required:
+        - id
+        - name
+        - date
+
+    Session:
+      title: Session
+      type: object
+      properties:
+        sessionId:
+          type: string
+        userId:
+          type: integer
+      required:
+        - sessionId
+        - userId
+
 tags:
-  - name: /users
+  - name: Users
+    description: ''
+  - name: Birthdays
+    description: ''
+  - name: Sessions
+    description: ''
+  - name: Sessions
     description: ''
