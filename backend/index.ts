@@ -16,17 +16,24 @@ const port: Number = Number(process.env.PORT) || 3000;
 const app: Express = express();
 const swaggerDocument: Object = YAML.load('./swagger.yaml');
 
-//Add HTTPS support
-const https = require('https');
-const fs = require('fs');
+//Add HTTPS support and key and certificate
+import * as https from 'https';
+import * as fs from 'fs';
+const options = {
+    key: fs.readFileSync('../certs/key.pem'),
+    cert: fs.readFileSync('../certs/cert.pem'),
+};
 
-//Add key and certificate
-const key = fs.readFileSync('../certs/server.key');
-const cert = fs.readFileSync('../certs/server.cert');
+module.exports = {
+    httpsServer: {
+        key: fs.readFileSync('../certs/key.pem'),
+        cert: fs.readFileSync('../certs/cert.pem'),
+    },
+}
 
 // Middleware
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'https://localhost:5173',
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     allowedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'],
     credentials: true
@@ -56,13 +63,11 @@ app.get('/health-check', (req, res) => {
     res.status(200).send('OK');
 });
 
-//Use HTTPS
-const server = https.createServer({
-    key: key,
-    cert: cert
-}, app);
+const httpsServer = https.createServer(options, app).listen(port, () => {
+    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
+});
 
-const io = new SocketIOServer(server, {
+const io = new SocketIOServer(httpsServer, {
     cors: corsOptions
 });
 
@@ -88,9 +93,4 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
-});
-
-// Start the HTTPS server
-server.listen(port, () => {
-    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
 });

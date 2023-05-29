@@ -44,7 +44,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { $http } from '../utils/http';
+import { $http } from '../utils/$http';
 import EditBirthdayModal from '../views/EditBirthdayModal.vue';
 import { io, Socket } from 'socket.io-client';
 

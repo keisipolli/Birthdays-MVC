@@ -38,7 +38,7 @@
   <button id="sign-up" class="btn btn-primary"  @click="signIn">Sign In</button>
 </template>
 <script>
-import { $http } from '../utils/http'
+import { $http } from '../utils/$http.ts'
 
 export default {
   data() {
