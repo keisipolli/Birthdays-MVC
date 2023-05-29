@@ -30,3 +30,9 @@ node_modules/
 /cypress/downloads/
 /cypress/screenshots/
 
+# Keys
+*.pem
+/certs/*.key
+/certs/*.crt
+/certs/*.cert
+
