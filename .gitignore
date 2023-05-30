@@ -35,4 +35,5 @@ node_modules/
 /certs/*.key
 /certs/*.crt
 /certs/*.cert
+certs/
 

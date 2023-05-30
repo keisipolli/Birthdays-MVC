@@ -38,7 +38,8 @@
   <button id="sign-up" class="btn btn-primary"  @click="signIn">Sign In</button>
 </template>
 <script>
-import { $http } from '../utils/$http.ts'
+import { $http } from '../utils/$http.ts';
+import { io } from 'socket.io-client';
 
 export default {
   data() {
@@ -48,8 +49,25 @@ export default {
       emailCheckResult: '',
     }
   },
+
+  mounted() {
+    const socket = io('https://localhost:3000');
+
+    socket.on('login', (sessionId) => {
+      // Update local storage with the new session id
+      localStorage.setItem('sessionId', sessionId);
+
+      // Set loggedIn to true
+      this.$root.loggedIn = true;
+
+      // Redirect to birthday list page
+      this.$router.push('/birthdays');
+    });
+  },
+
   methods: {
     signIn() {
+      const socket = io('https://localhost:3000');
       // Send a POST request to the backend
       $http.post('/sessions', {
         email: this.signInEmail,
@@ -59,6 +77,8 @@ export default {
         localStorage.setItem('sessionId', response.id)
         // Set loggedIn to true
         this.$root.loggedIn = true;
+        //Emit event to notify other tabs about login
+        socket.emit('login', response.id)
         // Redirect to birthday list page
         this.$router.push('/birthdays')
       }).catch((error) => {
@@ -95,8 +115,6 @@ export default {
   },
 }
 </script>
-
-
 
 <style>
 .invisible {

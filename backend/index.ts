@@ -90,6 +90,18 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('birthdayUpdated', updatedBirthday);
     });
 
+    socket.on('login', (sessionId) => {
+        console.log('login', sessionId);
+        //add session id to all clients
+        socket.broadcast.emit('login', sessionId);
+    });
+
+    socket.on('logout', (sessionId) => {
+        console.log('logout', sessionId);
+        //remove session id from all clients
+        socket.broadcast.emit('logout', sessionId);
+    });
+
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });

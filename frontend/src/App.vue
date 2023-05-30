@@ -13,17 +13,29 @@
 </template>
 
 <script>
+import { io } from 'socket.io-client';
+
 export default {
   name: 'App',
   data() {
     return {
       loggedIn: false,
+      socket: null, // Add a socket property
     };
   },
 
   created() {
     this.checkLoggedIn();
+
+    this.checkLoggedIn();
+    // Listen changes in Local Storage
+    window.addEventListener('storage', this.handleStorageChange);
   },
+
+  mounted() {
+    this.createSocketConnection();
+  },
+
   methods: {
     checkLoggedIn() {
       const sessionId = localStorage.getItem('sessionId');
@@ -32,10 +44,40 @@ export default {
         this.loggedIn = true;
       }
     },
-    logout() {
-      localStorage.removeItem('sessionId');
-      this.loggedIn = false;
-      this.$router.push('/');
+    createSocketConnection() {
+      // Create a WebSocket connection to the server
+      this.socket = io('https://localhost:3000', {
+        withCredentials: true,
+      });
+    },
+
+    logout: function () {
+      if (this.socket) {
+        console.log('Socket:', this.socket);
+        console.log('Socket connected:', this.socket.connected);
+
+        // Perform logout actions here
+        localStorage.setItem('logoutFlag', Date.now().toString());
+        this.loggedIn = false;
+        this.$router.push('/');
+
+        // Close the WebSocket connection
+        this.socket.close();
+      }
+    },
+
+    handleStorageChange(event) {
+      if (event.key === 'logoutFlag') {
+        // Check if the logout flag is present in local storage
+        const logoutFlag = localStorage.getItem('logoutFlag');
+        if (logoutFlag) {
+          // Remove the logout flag from local storage
+          localStorage.removeItem('logoutFlag');
+          // Perform logout actions here
+          this.loggedIn = false;
+          this.$router.push('/');
+        }
+      }
     },
   },
 };
