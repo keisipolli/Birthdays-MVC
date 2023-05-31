@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     https: {
-      key: fs.readFileSync('../certs/server.key'),
-      cert: fs.readFileSync('../certs/server.cert'),
+      key: fs.readFileSync('../backend/certs/server.key'),
+      cert: fs.readFileSync('../backend/certs/server.cert'),
     },
-  },
+    },
 });

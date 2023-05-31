@@ -20,14 +20,14 @@ const swaggerDocument: Object = YAML.load('./swagger.yaml');
 import * as https from 'https';
 import * as fs from 'fs';
 const options = {
-    key: fs.readFileSync('../certs/server.key'),
-    cert: fs.readFileSync('../certs/server.cert'),
+    key: fs.readFileSync('certs/server.key'),
+    cert: fs.readFileSync('certs/server.cert'),
 };
 
 module.exports = {
     httpsServer: {
-        key: fs.readFileSync('../certs/server.key'),
-        cert: fs.readFileSync('../certs/server.cert'),
+        key: fs.readFileSync('certs/server.key'),
+        cert: fs.readFileSync('certs/server.cert'),
     },
 }
 

@@ -51,13 +51,18 @@ export default {
       });
     },
 
-    logout: function () {
+    logout() {
       if (this.socket) {
         console.log('Socket:', this.socket);
         console.log('Socket connected:', this.socket.connected);
 
-        // Perform logout actions here
+        // Remove the sessionId from local storage
+        localStorage.removeItem('sessionId');
+
+        // Set a logout flag in local storage to trigger the logout in other tabs
         localStorage.setItem('logoutFlag', Date.now().toString());
+
+        // Perform logout actions here
         this.loggedIn = false;
         this.$router.push('/');
 
@@ -70,7 +75,7 @@ export default {
       if (event.key === 'logoutFlag') {
         // Check if the logout flag is present in local storage
         const logoutFlag = localStorage.getItem('logoutFlag');
-        if (logoutFlag) {
+        if (logoutFlag !== null) { // Check if the value is truthy
           // Remove the logout flag from local storage
           localStorage.removeItem('logoutFlag');
           // Perform logout actions here
