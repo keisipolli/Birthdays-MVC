@@ -8,7 +8,7 @@
       <router-link v-if="loggedIn" to="/birthdays">Birthdays</router-link>
       <a v-if="loggedIn" href="#" @click="logout">Sign Out</a>
     </nav>
-    <router-view></router-view>
+    <router-view :loggedIn="loggedIn" @loggedInChange="handleLoggedInChange" />
   </div>
 </template>
 
@@ -20,13 +20,11 @@ export default {
   data() {
     return {
       loggedIn: false,
-      socket: null, // Add a socket property
+      socket: null,
     };
   },
 
   created() {
-    this.checkLoggedIn();
-
     this.checkLoggedIn();
     // Listen changes in Local Storage
     window.addEventListener('storage', this.handleStorageChange);
@@ -75,7 +73,7 @@ export default {
       if (event.key === 'logoutFlag') {
         // Check if the logout flag is present in local storage
         const logoutFlag = localStorage.getItem('logoutFlag');
-        if (logoutFlag !== null) { // Check if the value is truthy
+        if (logoutFlag !== null) {
           // Remove the logout flag from local storage
           localStorage.removeItem('logoutFlag');
           // Perform logout actions here
@@ -83,6 +81,10 @@ export default {
           this.$router.push('/');
         }
       }
+    },
+
+    handleLoggedInChange(loggedIn) {
+      this.loggedIn = loggedIn;
     },
   },
 };
@@ -129,5 +131,3 @@ nav a:not(:last-child) {
   }
 }
 </style>
-
-

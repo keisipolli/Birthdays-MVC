@@ -8,6 +8,7 @@ import usersRoutes from "./routes/usersRoutes";
 import cors from 'cors';
 import sessionsRoutes from "./routes/sessionsRoutes";
 import birthdaysRoutes from "./routes/birthdaysRoutes";
+import oauthRoutes from "./routes/oauthRoutes";
 import bodyParser from "body-parser";
 import xmlparser from "express-xml-bodyparser";
 
@@ -57,6 +58,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use('/users', usersRoutes);
 app.use('/sessions', sessionsRoutes);
 app.use('/birthdays', birthdaysRoutes);
+app.use('/', oauthRoutes);
 
 // Health check
 app.get('/health-check', (req, res) => {
@@ -64,8 +66,8 @@ app.get('/health-check', (req, res) => {
 });
 
 const httpsServer = https.createServer(options, app).listen(port, () => {
-    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
-});
+    //console.log(Running at https://localhost:${port} and docs at https://localhost:${port}/docs);
+        });
 
 const io = new SocketIOServer(httpsServer, {
     cors: corsOptions
@@ -101,7 +103,6 @@ io.on('connection', (socket) => {
         //remove session id from all clients
         socket.broadcast.emit('logout', sessionId);
     });
-
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
