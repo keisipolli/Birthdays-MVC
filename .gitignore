@@ -35,5 +35,6 @@ node_modules/
 /certs/*.key
 /certs/*.crt
 /certs/*.cert
-certs/
+backend/certs/
+logs/backend.log
 

@@ -1,1 +1,5 @@
 /prisma/database.db
+
+/certs/server.cert
+/certs/server.key
+logs/backend.log

@@ -11,6 +11,7 @@ import birthdaysRoutes from "./routes/birthdaysRoutes";
 import oauthRoutes from "./routes/oauthRoutes";
 import bodyParser from "body-parser";
 import xmlparser from "express-xml-bodyparser";
+import logsRoutes from './routes/logsRoutes';
 
 dotenv.config();
 const port: Number = Number(process.env.PORT) || 3000;
@@ -59,6 +60,7 @@ app.use('/users', usersRoutes);
 app.use('/sessions', sessionsRoutes);
 app.use('/birthdays', birthdaysRoutes);
 app.use('/', oauthRoutes);
+app.use('/log', logsRoutes);
 
 // Health check
 app.get('/health-check', (req, res) => {
@@ -103,6 +105,7 @@ io.on('connection', (socket) => {
         //remove session id from all clients
         socket.broadcast.emit('logout', sessionId);
     });
+
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });

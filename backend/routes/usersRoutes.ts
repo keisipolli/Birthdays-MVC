@@ -1,7 +1,8 @@
-import express, {NextFunction, Request, Response} from 'express';
-import {handleErrors} from './handleErrors';
-import {PrismaClient} from '@prisma/client';
+import express, { NextFunction, Request, Response } from 'express';
+import { handleErrors } from './handleErrors';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { logEvent } from '../logger';
 
 const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
@@ -12,7 +13,7 @@ router.post(
     '/check-email',
     requireValidEmail,
     handleErrors(async (req: Request, res: Response) => {
-        return res.status(200).send({message: 'Email is valid'});
+        return res.status(200).send({ message: 'Email is valid' });
     })
 );
 
@@ -22,14 +23,14 @@ router.post(
     handleErrors(async (req: Request, res: Response) => {
         // Validate password
         if (!req.body.password) {
-            return res.status(400).send({error: 'Password is required'});
+            return res.status(400).send({ error: 'Password is required' });
         }
 
         // Check if the password is correct
         if (req.body.password.length < 8) {
             return res
                 .status(400)
-                .send({error: 'Password must be at least 8 characters long'});
+                .send({ error: 'Password must be at least 8 characters long' });
         }
 
         // Hash password
@@ -43,8 +44,10 @@ router.post(
             },
         });
 
+        logEvent('Sign-up', { userId: user.id });
+
         // Copy the user object
-        const userCopy: any = {...user};
+        const userCopy: any = { ...user };
 
         // Remove the password from the user object
         delete userCopy.password;
@@ -62,14 +65,14 @@ async function requireValidEmail(
 ) {
     // Validate email
     if (!req.body.email) {
-        return res.status(400).send({error: 'Email is required'});
+        return res.status(400).send({ error: 'Email is required' });
     }
 
     try {
-        const result = await verifyEmail(req.body.email);
-        if (!result.success) {
-            return res.status(400).send({error: result.info});
-        }
+        /* const result = await verifyEmail(req.body.email);
+            if (!result.success) {
+                return res.status(400).send({error: result.info});
+            } */
 
         // Check if user already exists
         const userExists = await prisma.user.findUnique({
@@ -79,14 +82,14 @@ async function requireValidEmail(
         });
 
         if (userExists) {
-            return res.status(409).send({error: 'Email already exists'});
+            return res.status(409).send({ error: 'Email already exists' });
         }
     } catch (error: any) {
         const errorObject = tryToParseJson(error);
         if (errorObject && errorObject.info) {
-            return res.status(400).send({error: errorObject.info});
+            return res.status(400).send({ error: errorObject.info });
         }
-        return res.status(400).send({error: error});
+        return res.status(400).send({ error: error });
     }
     next();
 }
@@ -110,8 +113,7 @@ function tryToParseJson(jsonString: string): any {
         if (o && typeof o === 'object') {
             return o;
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     return false;
 }
 

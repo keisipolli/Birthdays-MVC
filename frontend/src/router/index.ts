@@ -7,7 +7,7 @@ import SignIn from '../views/SignIn.vue';
 import BirthdayBook from '../views/BirthdayBook.vue';
 import TermsPolicies from '../views/TermsPolicies.vue';
 import Birthdays from '../views/Birthdays.vue';
-
+import Log from '../views/Log.vue';
 
 const routes = [
 
@@ -35,6 +35,11 @@ const routes = [
         path: '/birthdays',
         name: 'Birthdays',
         component: Birthdays,
+    },
+    {
+        path: '/log',
+        name: 'Log',
+        component: Log,
     },
 ];
 

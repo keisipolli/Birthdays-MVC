@@ -34,7 +34,9 @@
       </label>
     </div>
     <button id="sign-up" class="btn btn-primary" @click="signIn">Sign In</button>
+
     <div class="h-30">&nbsp;</div>
+
     <div id="signInDiv" ref="googleSignInButton"></div>
   </div>
 </template>
@@ -42,7 +44,6 @@
 <script>
 import { $http } from '../utils/$http.ts';
 import { io } from 'socket.io-client';
-
 
 export default {
   data() {
@@ -68,21 +69,30 @@ export default {
       this.$router.push('/birthdays');
     });
 
-    // Initialize the Google Sign-In client
-    google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      callback: this.handleCredentialResponse,
-      callbackUrl: 'https://localhost:3000/google-login',
-    });
-    google.accounts.id.renderButton(
-        document.getElementById('signInDiv'),
-        {
-          theme: 'filled_blue',
-          size: 'large',
-          text: 'long',
-          type: 'standard'
-        }
-    );
+    // Load Google Sign-In JavaScript library dynamically
+    const loadGoogleSignInLibrary = () => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      document.body.appendChild(script);
+    };
+
+    loadGoogleSignInLibrary();
+
+    // Initialize the Google Sign-In client once the library is loaded
+    window.onGoogleLibraryLoad = () => {
+      google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        callback: this.handleCredentialResponse,
+        callbackUrl: 'https://localhost:3000/google-login',
+      });
+      google.accounts.id.renderButton(document.getElementById('signInDiv'), {
+        theme: 'filled_blue',
+        size: 'large',
+        text: 'long',
+        type: 'standard',
+      });
+    };
   },
 
   methods: {
@@ -122,7 +132,7 @@ export default {
           })
           .then((response) => {
             // Save to localStorage
-            const sessionId = response.sessionId;
+            const sessionId = response.sessionId; // Fix: Access sessionId directly from the response object
             localStorage.setItem('sessionId', sessionId);
             console.log('signIn.vue', sessionId);
             // Set loggedIn to true
@@ -156,12 +166,6 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-    },
-  },
-  watch: {
-    signInEmail: function() {
-      this.clearEmailError();
-      this.checkEmail();
     },
   },
 };
