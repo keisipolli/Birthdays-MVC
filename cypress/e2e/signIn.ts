@@ -1,7 +1,7 @@
 import {Given, Then, When} from "@badeball/cypress-cucumber-preprocessor";
 
 Given('the user goes to the {string} page', (signin) => {
-    cy.visit(`https://localhost:5173${signin}`);
+    cy.visit(`${signin}`);
 });
 When('the user enters a valid email and password',() => {
     // Fill in the login form
@@ -14,13 +14,13 @@ When('clicks the sign-in button', () => {
     cy.get('button#sign-in').click();
 });
 Then('the user is redirected to the {string} page', (birthdays) => {
-    cy.visit(`https://localhost:5173${birthdays}`);
+    cy.visit(`${birthdays}`);
 });
 
 
 
 Given('the user navigates to the {string} page', (signin) => {
-    cy.visit(`https://localhost:5173${signin}`);
+    cy.visit(`${signin}`);
 });
 When('the user enters a valid email', () => {
 

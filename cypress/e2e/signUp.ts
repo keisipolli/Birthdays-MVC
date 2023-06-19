@@ -7,8 +7,8 @@ Cypress.on('uncaught:exception', () => {
 })
 
 let email = ''
-Given('the user navigates to the sign-up page',() => {
-    cy.visit("https://localhost:5173/signup");
+Given('the user navigates to the {string} page',(signup) => {
+    cy.visit(`${signup}`);
 });
 When('the user enters a valid email and password',() => {
 
@@ -32,7 +32,7 @@ When('the user enters an email that is already registered',() => {
 
 });
 When('enters a valid password',() => {
-    cy.get("input[name=password]").type("123456789");
+    cy.get("input[name=password]").type("qwerty123");
 });
 Then('an error message is displayed indicating the email is already registered',() => {
     cy.get("#email-error").should("contain", "Email already exists");

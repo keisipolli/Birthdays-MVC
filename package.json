@@ -12,10 +12,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^15.1.4",
+    "@badeball/cypress-cucumber-preprocessor": "^15.1.5",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0"
   },
   "dependencies": {
+    "cypress-cucumber-preprocessor": "^4.3.1",
     "ts-node": "^10.9.1",
     "vue": "^3.2.36"
   }

@@ -35,7 +35,7 @@ module.exports = {
 
 // Middleware
 const corsOptions = {
-    origin: 'https://localhost:5173',
+    origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     allowedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'],
     credentials: true
@@ -69,7 +69,7 @@ app.get('/health-check', (req, res) => {
 
 const httpsServer = https.createServer(options, app).listen(port, () => {
     //console.log(Running at https://localhost:${port} and docs at https://localhost:${port}/docs);
-        });
+});
 
 const io = new SocketIOServer(httpsServer, {
     cors: corsOptions

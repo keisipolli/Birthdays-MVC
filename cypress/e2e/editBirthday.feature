@@ -1,7 +1,8 @@
 Feature: Edit Birthday
 
   Scenario: User edits a birthday
-    Given the user is logged in
+    Given the user "testuser@gmail.com" with password "qwerty123" exists
+    And the user "testuser@gmail.com" with password "qwerty123" is logged in
     And the user is on the "/birthdays" page
     And there is a birthday with the name "John Doe" and date "2023-06-01"
     When the user clicks on the "Edit" button for the birthday with the name "John Doe"
