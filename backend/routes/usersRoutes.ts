@@ -13,7 +13,7 @@ router.post(
     '/check-email',
     requireValidEmail,
     handleErrors(async (req: Request, res: Response) => {
-        return res.status(200).send({ message: 'Email is valid' });
+        return res.status(200).send({message: 'Email is valid'});
     })
 );
 
@@ -57,6 +57,8 @@ router.post(
     })
 );
 
+
+
 // Middleware
 async function requireValidEmail(
     req: Request,
@@ -65,14 +67,14 @@ async function requireValidEmail(
 ) {
     // Validate email
     if (!req.body.email) {
-        return res.status(400).send({ error: 'Email is required' });
+        return res.status(401).send({error: 'Email is required'});
     }
 
     try {
-        /* const result = await verifyEmail(req.body.email);
-            if (!result.success) {
-                return res.status(400).send({error: result.info});
-            } */
+        /*const result = await verifyEmail(req.body.email);
+        if (!result.success) {
+            return res.status(400).send({error: result.info});
+        } */
 
         // Check if user already exists
         const userExists = await prisma.user.findUnique({
@@ -82,14 +84,14 @@ async function requireValidEmail(
         });
 
         if (userExists) {
-            return res.status(409).send({ error: 'Email already exists' });
+            return res.status(409).send({error: 'Email already exists'});
         }
     } catch (error: any) {
         const errorObject = tryToParseJson(error);
         if (errorObject && errorObject.info) {
-            return res.status(400).send({ error: errorObject.info });
+            return res.status(400).send({error: errorObject.info});
         }
-        return res.status(400).send({ error: error });
+        return res.status(400).send({error: error});
     }
     next();
 }
@@ -109,11 +111,12 @@ async function verifyEmail(email: string): Promise<any> {
 
 function tryToParseJson(jsonString: string): any {
     try {
-        var o = JSON.parse(jsonString);
+        let o = JSON.parse(jsonString);
         if (o && typeof o === 'object') {
             return o;
         }
-    } catch (e) {}
+    } catch (e) {
+    }
     return false;
 }
 

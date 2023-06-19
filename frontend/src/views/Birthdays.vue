@@ -4,7 +4,7 @@
     <ul>
       <li v-for="birthday in birthdays" :key="birthday.id" class="birthday">
         <span class="name">{{ birthday.name }}</span>: <span class="date">{{ birthday.date }}</span>
-        <button @click="editBirthdayModal(birthday)">Edit</button>
+        <button class= "edit" @click="editBirthdayModal(birthday)">Edit</button>
         <button class ="delete" @click="deleteBirthday(birthday.id)">Delete</button>
 
       </li>
@@ -18,7 +18,7 @@
         <label for="date">Date:</label>
         <input type="date" id="date" v-model="newBirthday.date">
       </div>
-      <button type="submit">Add Birthday</button>
+      <button name="addbd" type="submit">Add Birthday</button>
     </form>
     <div class="edit-birthday-modal" v-if="showEditModal">
       <div class="modal-overlay" @click="closeEditModal"></div>
@@ -35,7 +35,7 @@
           </div>
           <div class="modal-buttons">
             <button type="button" @click="closeEditModal">Cancel</button>
-            <button type="submit">Save</button>
+            <button id="save" type="submit">Save</button>
           </div>
         </form>
       </div>

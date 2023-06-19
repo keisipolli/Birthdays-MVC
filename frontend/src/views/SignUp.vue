@@ -81,7 +81,7 @@ export default {
   </div>
   <div class="h-30">&nbsp;</div>
   <!--Do not show sign in button if the email and password are not valid-->
-  <button id="sign-up" class="btn btn-primary" @click="signUp" :disabled="!(signUpEmail.length > 0 && signUpPassword.length > 0 && emailCheckResult.length === 0)">Sign Up</button>
+  <button id="sign-up" class="btn btn-primary" @click="signUp" >Sign Up</button>
 </template>
 
 

@@ -33,7 +33,7 @@
               :class="{ invisible: !(signInPassword.length > 0 && signInPassword.length < 8) }">Password must be at least 8 characters long</span>
       </label>
     </div>
-    <button id="sign-up" class="btn btn-primary" @click="signIn">Sign In</button>
+    <button id="sign-in" class="btn btn-primary" @click="signIn">Sign In</button>
 
     <div class="h-30">&nbsp;</div>
 
@@ -150,23 +150,38 @@ export default {
     clearEmailError() {
       this.emailCheckResult = '';
     },
+    /*
     checkEmail() {
       // If the email is empty, don't send a request
       if (!this.signInEmail) {
         this.emailCheckResult = '';
         return;
       }
+
       // Send a POST /users/check-email request to the backend
-      $http.post('/users/check-email', {
-        email: this.signInEmail,
-      }, { disableErrorHandling: true })
+      $http
+          .post('/users/check-email', {
+            email: this.signInEmail,
+          }, { disableErrorHandling: true })
           .then((response) => {
-            this.emailCheckResult = response.result;
+            // Check if the response contains the expected data
+            if (response && response.result && response.result.length) {
+              this.emailCheckResult = response.result;
+            } else {
+              this.emailCheckResult = 'Unexpected response';
+            }
           })
           .catch((error) => {
-            console.log(error);
+            // Check if the error response has a status code
+            if (error.response && error.response.status === 409) {
+              this.emailCheckResult = 'Email already in use';
+            } else {
+              console.error(error);
+              this.emailCheckResult = 'Error occurred';
+            }
           });
     },
+*/
   },
 };
 </script>

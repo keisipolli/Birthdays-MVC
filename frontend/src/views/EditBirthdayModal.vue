@@ -18,7 +18,7 @@
           <input type="date" id="edited-date" v-model="selectedDate">
         </div>
         <!-- Button to save changes to the birthday -->
-        <button type="submit">Save</button>
+        <button id="save" type="submit">Save</button>
       </form>
     </div>
   </div>

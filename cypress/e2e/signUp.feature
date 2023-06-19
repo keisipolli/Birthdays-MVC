@@ -1,5 +1,4 @@
-Feature: Sign up for note-taking app
-
+Feature: Sign up for birthday book
   Scenario: User successfully signs up with valid email and password
     Given the user navigates to the sign-up page
     When the user enters a valid email and password
@@ -16,6 +15,5 @@ Feature: Sign up for note-taking app
   Scenario: User attempts to sign up with an invalid password
     Given the user navigates to the sign-up page
     When the user enters a valid email
-    And enters an invalid password
-    And clicks the sign-up button
+    And enters an incorrect password and clicks the sign-up button
     Then an error message is displayed indicating the password requirements are not met
