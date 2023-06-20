@@ -2,6 +2,7 @@ openapi: 3.0.2
 info:
   title: BirthdayBook
   version: 1.0.0
+
 paths:
   /users:
     summary: Path used to manage the list of users.
@@ -65,6 +66,8 @@ paths:
       operationId: createUser
       summary: Create a User
       description: Creates a new instance of a User
+      security:
+        - Bearer: []
 
   /birthdays:
     get:
@@ -91,6 +94,8 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
+      security:
+        - Bearer: []
 
     post:
       requestBody:
@@ -131,17 +136,20 @@ paths:
       operationId: createBirthday
       summary: Create a Birthday
       description: Creates a new birthday entry.
+      security:
+        - Bearer: []
 
+  /birthdays/{id}:
     patch:
       requestBody:
         description: Updated birthday data.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Birthday'
+              $ref: '#/components/schemas/BirthdayUpdate'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Birthday'
+              $ref: '#/components/schemas/BirthdayUpdate'
         required: true
       tags:
         - Birthdays
@@ -173,8 +181,17 @@ paths:
       operationId: updateBirthday
       summary: Update a Birthday
       description: Updates an existing birthday entry.
+      security:
+        - Bearer: []
+      parameters:
+        - in: path
+          name: id
+          description: ID of the birthday to update.
+          required: true
+          schema:
+            type: string
+            format: int32
 
-  /birthdays/{id}:
     delete:
       tags:
         - Birthdays
@@ -187,7 +204,7 @@ paths:
           description: ID of the birthday to delete.
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '204':
           description: Successful response. Birthday deleted.
@@ -206,6 +223,8 @@ paths:
           description: Birthday not found
         '500':
           description: Internal Server Error
+      security:
+        - Bearer: []
 
   /sessions:
     post:
@@ -247,7 +266,8 @@ paths:
         '500':
           description: Internal Server Error
       operationId: createSession
-      security: []
+      security:
+        - Bearer: []
 
     delete:
       tags:
@@ -273,6 +293,8 @@ paths:
           description: Session not found
         '500':
           description: Internal Server Error
+      security:
+        - Bearer: []
 
 components:
   schemas:
@@ -298,7 +320,6 @@ components:
         email:
           type: string
         password:
-          format: date
           type: string
       example:
         email: asd6@asd.ee
@@ -313,6 +334,21 @@ components:
           type: string
       example:
         error: Email is required
+
+    BirthdayUpdate:
+      title: Birthday Update
+      type: object
+      properties:
+        name:
+          type: string
+          example: Jane Doe
+        date:
+          type: string
+          format: date
+          example: 2023-06-20
+      required:
+        - name
+        - date
 
     NewBirthday:
       title: New Birthday
@@ -358,6 +394,10 @@ components:
         - sessionId
         - userId
 
+  securitySchemes:
+    Bearer:
+      scheme: bearer
+      type: http
 tags:
   - name: Users
     description: ''
