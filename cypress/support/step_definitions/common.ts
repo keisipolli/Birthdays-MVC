@@ -22,5 +22,5 @@ Given(/^the user "([^"]*)" with password "([^"]*)" is logged in$/, function (use
     cy.get('input[name="password"]').type(password);
 
     cy.get('button#sign-in').click();
-
+    cy.get('a#sign-out').should('be.visible');
 });

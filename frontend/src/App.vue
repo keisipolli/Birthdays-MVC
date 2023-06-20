@@ -6,7 +6,7 @@
       <router-link v-if="!loggedIn" to="/signup">Sign Up</router-link>
       <router-link v-if="!loggedIn" to="/signin">Sign In</router-link>
       <router-link v-if="loggedIn" to="/birthdays">Birthdays</router-link>
-      <a v-if="loggedIn" href="#" @click="logout">Sign Out</a>
+      <a v-if="loggedIn" id="sign-out" href="#" @click="logout">Sign Out</a>>
     </nav>
     <router-view :loggedIn="loggedIn" @loggedInChange="handleLoggedInChange" />
   </div>
