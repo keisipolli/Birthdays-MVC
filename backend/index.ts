@@ -33,9 +33,23 @@ module.exports = {
     },
 }
 
+// Get baseUrl from ../cypress.config.ts
+import cypressConfig from '../cypress.config';
+let baseUrl = cypressConfig?.e2e?.baseUrl;
+
+// Check if baseUrl is set
+if (!baseUrl) {
+    throw new Error('baseUrl is not set in cypress.config.ts');
+}
+
+// Trim trailing slash
+if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl.slice(0, -1);
+}
+
 // Middleware
 const corsOptions = {
-    origin: '*',
+    origin: baseUrl,
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     allowedHeaders: ['Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'],
     credentials: true

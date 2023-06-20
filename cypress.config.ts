@@ -5,12 +5,16 @@ import createEsbuildPlugin from "@badeball/cypress-cucumber-preprocessor/esbuild
 
 export default defineConfig({
     e2e: {
-        baseUrl: "https://test:5173/",
+        baseUrl: "https://localhost:5173/",
         specPattern: "**/*.feature",
         async setupNodeEvents(
             on: Cypress.PluginEvents,
             config: Cypress.PluginConfigOptions
         ): Promise<Cypress.PluginConfigOptions> {
+
+            // Read the baseUrl from the environment variable VITE_API_BASE_URL
+            config.env.VITE_API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://localhost:3000';
+
             // This is required for the preprocessor to be able to generate JSON reports after each run, and more,
             await addCucumberPreprocessorPlugin(on, config);
 
@@ -26,3 +30,4 @@ export default defineConfig({
         },
     },
 });
+
