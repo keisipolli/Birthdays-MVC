@@ -68,7 +68,6 @@ paths:
       description: Creates a new instance of a User
       security:
         - Bearer: []
-
   /birthdays:
     get:
       tags:
@@ -275,6 +274,13 @@ paths:
       summary: Delete a session
       description: Deletes a session for a user.
       operationId: deleteSession
+      parameters:
+        - in: path
+          name: id
+          description: ID of the session to delete.
+          required: true
+          schema:
+            type: string
       responses:
         '204':
           description: Successful response. Session deleted.
@@ -294,7 +300,8 @@ paths:
         '500':
           description: Internal Server Error
       security:
-        - Bearer: []
+        - Bearer: [ ]
+
 
 components:
   schemas:

@@ -73,7 +73,7 @@ router.delete(
 
             logEvent('Sign-out', { sessionId: session.id });
 
-            res.status(200).send(session);
+            res.status(204).send(session);
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal server error');
