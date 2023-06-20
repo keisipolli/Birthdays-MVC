@@ -1,9 +1,11 @@
-import express from 'express';
+import express, { Router, Express } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { handleErrors } from './handleErrors';
-const prisma = new PrismaClient();
-const router = express.Router();
 import { logEvent } from '../logger';
+import configureXmlJsonSupport from '../middleware/xmljsonsupport';
+
+const prisma = new PrismaClient();
+const router: Express = express(); // Change the type to Express
 
 interface CustomRequest extends express.Request {
     user?: { id: number };
@@ -30,6 +32,9 @@ const verifySession = async (
     req.user = { id: session.user.id };
     next();
 };
+
+// Apply XML/JSON support middleware
+configureXmlJsonSupport(router);
 
 router.post(
     '/',
