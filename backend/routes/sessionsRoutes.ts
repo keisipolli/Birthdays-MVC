@@ -58,14 +58,14 @@ router.delete(
         try {
             const sessionId = req.headers.authorization;
             if (!sessionId) {
-                return res.status(401).send('Session ID not provided');
+                return res.status(401).send({error: 'Session not found'});
             }
             console.log('Session ID to delete:', sessionId);
             const session = await prisma.session.findUnique({
                 where: { id: sessionId.substring(7) },
             });
             if (!session) {
-                return res.status(404).send('Session not found');
+                return res.status(404).send({error: 'Session not found'});
             }
             await prisma.session.delete({
                 where: { id: sessionId.substring(7) },
@@ -76,7 +76,7 @@ router.delete(
             res.status(204).send(session);
         } catch (error) {
             console.error(error);
-            res.status(500).send('Internal server error');
+            res.status(500).send({error: 'Session not found'});
         }
     })
 );

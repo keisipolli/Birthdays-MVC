@@ -274,13 +274,6 @@ paths:
       summary: Delete a session
       description: Deletes a session for a user.
       operationId: deleteSession
-      parameters:
-        - in: path
-          name: id
-          description: ID of the session to delete.
-          required: true
-          schema:
-            type: string
       responses:
         '204':
           description: Successful response. Session deleted.
@@ -295,8 +288,38 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    error: Session not found
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Unauthorized:
+                  value:
+                    error: Session not found
         '404':
           description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                SessionNotFound:
+                  value:
+                    error: Session not found
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                SessionNotFound:
+                  value:
+                    error: Session not found
         '500':
           description: Internal Server Error
       security:
