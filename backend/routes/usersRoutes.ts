@@ -3,14 +3,11 @@ import { handleErrors } from './handleErrors';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { logEvent } from '../logger';
-import configureXmlJsonSupport from '../middleware/xmljsonsupport';
 
 const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
 const router: Express = express(); // Change the type to Express
 
-// Add XML/JSON support middleware
-configureXmlJsonSupport(router);
 
 // Routes
 router.post(
@@ -60,8 +57,6 @@ router.post(
         return res.status(201).send(userCopy);
     })
 );
-
-
 
 // Middleware
 async function requireValidEmail(

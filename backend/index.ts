@@ -1,37 +1,32 @@
 import { Server as SocketIOServer } from 'socket.io';
-import express, {Express, NextFunction, Request, Response} from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
-import {Error} from './types';
+import { Error } from './types';
 import * as dotenv from 'dotenv';
-import usersRoutes from "./routes/usersRoutes";
+import usersRoutes from './routes/usersRoutes';
 import cors from 'cors';
-import sessionsRoutes from "./routes/sessionsRoutes";
-import birthdaysRoutes from "./routes/birthdaysRoutes";
-import oauthRoutes from "./routes/oauthRoutes";
-import bodyParser from "body-parser";
-import xmlparser from "express-xml-bodyparser";
+import sessionsRoutes from './routes/sessionsRoutes';
+import birthdaysRoutes from './routes/birthdaysRoutes';
+import oauthRoutes from './routes/oauthRoutes';
+import bodyParser from 'body-parser';
 import logsRoutes from './routes/logsRoutes';
+import configureXmlSupport from './middleware/xmlResponse';
+import configureXmlRequest from './middleware/xmlRequest';
 
 dotenv.config();
-const port: Number = Number(process.env.PORT) || 3000;
+const port: number = Number(process.env.PORT) || 3000;
 const app: Express = express();
-const swaggerDocument: Object = YAML.load('./swagger.yaml');
+const swaggerDocument: object = YAML.load('./swagger.yaml');
 
-//Add HTTPS support and key and certificate
+// Add HTTPS support and key and certificate
 import * as https from 'https';
 import * as fs from 'fs';
+
 const options = {
     key: fs.readFileSync('certs/server.key'),
     cert: fs.readFileSync('certs/server.cert'),
 };
-
-module.exports = {
-    httpsServer: {
-        key: fs.readFileSync('certs/server.key'),
-        cert: fs.readFileSync('certs/server.cert'),
-    },
-}
 
 // Get baseUrl from ../cypress.config.ts
 import cypressConfig from '../cypress.config';
@@ -58,10 +53,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(bodyParser.xml());
-app.use(xmlparser());
 app.use(express.static('public'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Configure XML support for response and request
+configureXmlSupport(app);
+app.use(configureXmlRequest);
 
 // Error handling
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
@@ -82,7 +79,7 @@ app.get('/health-check', (req, res) => {
 });
 
 const httpsServer = https.createServer(options, app).listen(port, () => {
-    //console.log(Running at https://localhost:${port} and docs at https://localhost:${port}/docs);
+    console.log(`Running at https://localhost:${port} and docs at https://localhost:${port}/docs`);
 });
 
 const io = new SocketIOServer(httpsServer, {
@@ -110,13 +107,13 @@ io.on('connection', (socket) => {
 
     socket.on('login', (sessionId) => {
         console.log('login', sessionId);
-        //add session id to all clients
+        // Add session id to all clients
         socket.broadcast.emit('login', sessionId);
     });
 
     socket.on('logout', (sessionId) => {
         console.log('logout', sessionId);
-        //remove session id from all clients
+        // Remove session id from all clients
         socket.broadcast.emit('logout', sessionId);
     });
 

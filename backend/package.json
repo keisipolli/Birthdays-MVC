@@ -34,6 +34,7 @@
     "ws": "^8.13.0",
     "xml": "^1.0.1",
     "xml-parser": "^1.2.1",
+    "xml2js": "^0.6.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import express, { Router, Express } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { handleErrors } from './handleErrors';
 import { logEvent } from '../logger';
-import configureXmlJsonSupport from '../middleware/xmljsonsupport';
+
 
 const prisma = new PrismaClient();
 const router: Express = express(); // Change the type to Express
@@ -33,8 +33,6 @@ const verifySession = async (
     next();
 };
 
-// Apply XML/JSON support middleware
-configureXmlJsonSupport(router);
 
 router.post(
     '/',
@@ -181,3 +179,4 @@ router.get(
 );
 
 export default router;
+

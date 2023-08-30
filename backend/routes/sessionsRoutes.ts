@@ -3,15 +3,13 @@ import { handleErrors } from './handleErrors';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { logEvent } from '../logger';
-import configureXmlJsonSupport from '../middleware/xmljsonsupport';
 
 const { v4: uuidv4 } = require('uuid');
 const verifier = require('@gradeup/email-verify');
 const prisma = new PrismaClient();
 const router: Express = express(); // Change the type to Express
 
-// Add XML/JSON support middleware
-configureXmlJsonSupport(router);
+
 
 
 // Routes
@@ -24,6 +22,7 @@ router.post(
                     email: req.body.email,
                 },
             });
+
             console.log(user);
             if (!user) return res.status(404).send('User not found');
 
